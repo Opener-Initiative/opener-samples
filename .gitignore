@@ -1,0 +1,9 @@
+VERSION
+/deps/
+.west/
+build/
+.vscode/
+.venv/
+__pycache__
+twister-out*
+.ccache/

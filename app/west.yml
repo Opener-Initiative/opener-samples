@@ -1,0 +1,94 @@
+manifest:
+  remotes:
+    - name: dectnrp
+      url-base: https://github.com/Opener-Initiative
+
+    - name: ncs
+      url-base: https://github.com/nrfconnect
+
+  group-filter:
+    [
+      -nrf-802154,
+      -dragoon,
+      -find-my,
+      -matter,
+      -ant,
+      -babblesim,
+      -sidewalk,
+      -bsec,
+      -azure-sdk-for-c,
+      -cirrus,
+      -openthread,
+      -bme68x,
+      -optional,
+    ]
+
+  projects:
+    - name: zephyr
+      remote: ncs
+      repo-path: sdk-zephyr
+      revision: ncs-v3.2.4
+      import:
+        path-prefix: deps
+        path-blocklist:
+          - modules/hal/*
+        name-allowlist:
+          - hal_nordic
+          - cmsis_6 # required by the ARM port for Cortex-M
+          - zcbor
+          - tinycrypt
+          - segger
+
+    - name: nrf
+      remote: ncs
+      repo-path: sdk-nrf
+      # Always use git tag or commit hash as a revision
+      revision: v3.2.4
+      import:
+        path-prefix: deps
+        path-blocklist:
+          - modules/hal/*
+        name-blocklist:
+          - azure-sdk-for-c
+          - canopennode
+          - cirrus-logic
+          - hostap
+          - libmodem
+          - loramac-node
+          - lvgl
+          - matter
+          - memfault-firmware-sdk
+          - mipi-sys-t
+          - openthread
+          - wfa-qt-control-app
+          - nrf-802154
+          - dragoon
+          - sidewalk
+          - find-my
+          - ant
+          - bme68x
+          - bsec
+          - babblesim_base
+          - babblesim_ext_2G4_libPhyComv1
+          - babblesim_ext_2G4_phy_v1
+          - babblesim_ext_2G4_channel_NtNcable
+          - babblesim_ext_2G4_channel_multiatt
+          - babblesim_ext_2G4_modem_magic
+          - babblesim_ext_2G4_modem_BLE_simple
+          - babblesim_ext_2G4_device_burst_interferer
+          - babblesim_ext_2G4_device_WLAN_actmod
+          - babblesim_ext_2G4_device_playback
+          - babblesim_ext_2G4_device_playbackv2
+          - babblesim_ext_libCryptov1
+          - doc-internal
+          
+    - name: dectnrp-opener
+      remote: dectnrp
+      repo-path: opener
+      # Always use git tag or commit hash as a revision
+      revision: bootstrap
+      path: deps/dectnrp-opener
+
+
+  self:
+    path: app
