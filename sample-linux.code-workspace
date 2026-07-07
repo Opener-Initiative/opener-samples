@@ -48,7 +48,7 @@
 					"isDefault": true
 				},
 				"linux": {
-					"command": ".venv/bin/west build -b nrf9151dk/nrf9151/ns app/dectnrp-driver/"
+					"command": ".venv/bin/west build -b nrf9151dk/nrf9151/ns samples/dectnrp-driver/"
 				},
 				"problemMatcher": [
 					"$gcc"
