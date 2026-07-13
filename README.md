@@ -60,13 +60,13 @@ west sdk install
 Build a sample application using:
 
 ```bash
-west build -p always -b <board-name> samples/dectnrp-driver/
+west build -p always -b <board-name> -d <build-folder> samples/<example>/
 ```
 
-Example:
+For example following command builds dectnrp-driver sample:
 
 ```bash
-west build -p always -b nrf9151dk/nrf9151/ns samples/dectnrp-driver/
+west build -p always -b nrf9151dk/nrf9151/ns -d build/nrf9151dk/nrf9151/ns/dectnrp-driver/ samples/dectnrp-driver/
 ```
 
 ---
