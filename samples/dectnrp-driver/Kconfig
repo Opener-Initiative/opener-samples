@@ -8,3 +8,41 @@ source "$(ZEPHYR_BASE)/subsys/logging/Kconfig.template.log_config"
 menu "Zephyr Kernel"
 source "Kconfig.zephyr"
 endmenu
+
+config DECTNRP_SAMPLE_NETWORK_ID
+	hex "DECTNRP Network ID"
+	default 0x32545279
+	range 0x0 0xffffffff
+	help
+	  The default Network ID of the network this radio device should belong to.
+	  When NET_CONFIG_DECTNRP_NETWORK_ID==0x0 is configured then no Network ID is choosen 
+	  per default.
+
+config DECTNRP_SAMPLE_LONG_DEVICE_ID
+	hex "Long device address"
+	default 0x55667788
+	range 0x1 0xfffffffd
+	help
+	  Long device id of device 1.
+
+config DECTNRP_SAMPLE_LONG_ADDR
+	hex "DECTNRP Network ID"
+	default 0x32545279
+	range 0x0 0xffffffff
+	help
+	  The default Network ID of the network this radio device should belong to.
+	  When NET_CONFIG_DECTNRP_NETWORK_ID==0x0 is configured then no Network ID is choosen 
+	  per default.
+
+
+config DECTNRP_SAMPLE_CHANNEL
+	int "DECTNRP sample default channel"
+	default 1677
+	help
+	  The channel to use by default in the sample application. 1677 is last channel of band 1.
+
+config DECTNRP_SAMPLE_PERIOD
+	int "RX period"
+	default 5000
+	help
+	   The length of the receive window time in milliseconds.
