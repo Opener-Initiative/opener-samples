@@ -1,12 +1,12 @@
-# 📡 DECT NR+ Opener Samples
+# 📡 Opener Samples
 
-Reference applications and sample projects for the **Opener DECT-2020 NR+ protocol stack**.
+Reference applications and sample projects for the **Opener DECT-2020 NR protocol stack implementation**.
 
 > **Note**
 >
 > This repository contains reference applications built on top of the
-> [Opener DECT-2020 NR+ protocol stack](https://github.com/Opener-Initiative/opener),
-> which is licensed under the Apache License 2.0.
+> [Opener DECT-2020 NR protocol stack implementation](https://github.com/Opener-Initiative/opener),
+> which is provided under the Apache 2.0 license.
 
 [[*TOC*]]
 
