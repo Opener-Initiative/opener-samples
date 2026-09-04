@@ -12,6 +12,11 @@
 		"python.venvPath": "${workspaceFolder}/.venv",
 		"python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
 
+		// Override with your JLINK serial number
+		"device1-serial-number": "1051268198",
+		// Override with your JLINK serial number
+		"device2-serial-number": "1051244942",
+
 		"git.autofetch": false,
 		"git.autoRepositoryDetection": true,
 		"git.repositoryScanMaxDepth": 3,
@@ -36,26 +41,27 @@
 			"*.c": "c",
 		},
 		"makefile.configureOnOpen": false,
+		"cortex-debug.variableUseNaturalFormat": false,
 	},
 	"tasks": {
 		"version": "2.0.0",
 		"tasks": [
 			{
-				"label": "Build Device",
+				"label": "Build dectnrp-driver",
 				"type": "shell",
 				"group": {
 					"kind": "build",
 					"isDefault": true
 				},
 				"linux": {
-					"command": ".venv/bin/west build -b nrf9151dk/nrf9151/ns samples/dectnrp-driver/"
+					"command": ".venv/bin/west build -b nrf9151dk/nrf9151/ns -d ${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp-driver/ samples/dectnrp-driver/"
 				},
 				"problemMatcher": [
 					"$gcc"
 				]
 			},
 			{
-				"label": "Flash Device",
+				"label": "Flash",
 				"type": "shell",
 				"group": {
 					"kind": "build",
@@ -68,16 +74,44 @@
 					"$python"
 				]
 			},
+			{
+				"label": "Flash Device1",
+				"type": "shell",
+				"group": {
+					"kind": "build",
+					"isDefault": true
+				},
+				"linux": {
+					"command": ".venv/bin/west flash --build-dir ${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp-driver/ --dev-id ${config:device1-serial-number}",
+				},
+				"problemMatcher": [
+					"$python"
+				]
+			},
+			{
+				"label": "Flash Device2",
+				"type": "shell",
+				"group": {
+					"kind": "build",
+					"isDefault": true
+				},
+				"linux": {
+					"command": ".venv/bin/west flash --build-dir ${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp-driver/ --dev-id ${config:device1-serial-number}",
+				},
+				"problemMatcher": [
+					"$python"
+				]
+			},
 		]
 	},
 	"launch": {
 		"version": "0.2.0",
 		"configurations": [
 			{
-				"name": "Device (launch)",
+				"name": "Device(launch)",
 				"type": "cortex-debug",
 				"device": "NRF9151_xxca",
-				"executable": "${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp-driver/dectnrp-driver/zephyr/zephyr.elf",
+				"executable": "${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp-driver/dectnrp-driver/zephyr/sample-dectnrp-driver.elf",
 				"loadFiles": [
 					"${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp-driver/merged.hex"
 				],
@@ -100,6 +134,74 @@
 					"decoders": [
 						{
 							"label": "Device",
+							"port": 0,
+							"type": "console"
+						}
+					]
+				},
+			},
+			{
+				"name": "Device1(launch)",
+				"type": "cortex-debug",
+				"device": "NRF9151_xxca",
+				"executable": "${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp-driver/dectnrp-driver/zephyr/sample-dectnrp-driver.elf",
+				"loadFiles": [
+					"${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp-driver/merged.hex"
+				],
+				"cwd": "${workspaceFolder}",
+				"rtos": "Zephyr",
+				"request": "launch",
+				"runToEntryPoint": "main",
+				"servertype": "jlink",
+				"interface": "swd",
+				"serialNumber": "${config:device1-serial-number}",
+				"serverArgs": [
+					"-speed",
+					"4000",
+				],
+				"gdbPath": "${config:zephyrSdkPath}/arm-zephyr-eabi/bin/arm-zephyr-eabi-gdb",
+				"svdPath": "${workspaceFolder}/deps/modules/hal/nordic/nrfx/mdk/nrf9120.svd",
+				//"showDevDebugOutput": "raw",
+				"rttConfig": { // this automatically opens a rtt viewer terminal
+					"enabled": true,
+					"address": "auto",
+					"decoders": [
+						{
+							"label": "Device1",
+							"port": 0,
+							"type": "console"
+						}
+					]
+				},
+			},							
+			{
+				"name": "Device2(launch)",
+				"type": "cortex-debug",
+				"device": "NRF9151_xxca",
+				"executable": "${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp-driver/dectnrp-driver/zephyr/sample-dectnrp-driver.elf",
+				"loadFiles": [
+					"${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp-driver/merged.hex"
+				],
+				"cwd": "${workspaceFolder}",
+				"rtos": "Zephyr",
+				"request": "launch",
+				"runToEntryPoint": "main",
+				"servertype": "jlink",
+				"interface": "swd",
+				"serialNumber": "${config:device2-serial-number}",
+				"serverArgs": [
+					"-speed",
+					"4000",
+				],
+				"gdbPath": "${config:zephyrSdkPath}/arm-zephyr-eabi/bin/arm-zephyr-eabi-gdb",
+				"svdPath": "${workspaceFolder}/deps/modules/hal/nordic/nrfx/mdk/nrf9120.svd",
+				//"showDevDebugOutput": "raw",
+				"rttConfig": { // this automatically opens a rtt viewer terminal
+					"enabled": true,
+					"address": "auto",
+					"decoders": [
+						{
+							"label": "Device2",
 							"port": 0,
 							"type": "console"
 						}
