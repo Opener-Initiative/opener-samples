@@ -86,7 +86,7 @@ manifest:
       remote: dectnrp
       repo-path: opener
       # Always use git tag or commit hash as a revision
-      revision: main
+      revision: dectnrp_nrf91-first-shot
       path: deps/dectnrp-opener
 
 

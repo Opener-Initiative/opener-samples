@@ -1,0 +1,56 @@
+name: Build Samples
+
+on:
+  pull_request:
+    branches: [ main ]
+
+env:
+  PACKAGE_BASE: package/nrf9151dk/samples
+  BUILD_BASE: build/nrf9151dk/nrf9151/ns
+
+jobs:
+  build:
+    name: Build samples
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
+      - name: Setup Zephyr project
+        uses: zephyrproject-rtos/action-zephyr-setup@v1
+        with:
+          app-path: samples
+          toolchains: arm-zephyr-eabi
+          manifest-file-name: west.yml
+          sdk-version: 0.17.4
+          ccache-cache-key: ${{ runner.os }}
+
+      - name: Build samples
+        run: west build -p always -b nrf9151dk/nrf9151/ns -d ${BUILD_BASE}/dectnrp-driver/ samples/dectnrp-driver/
+        env:
+          ZEPHYR_TOOLCHAIN_VARIANT: zephyr
+
+      - name: Stage artifacts
+        run: |
+          # Create a artifacts folder
+          mkdir -p ${{ env.PACKAGE_BASE }}/dectnrp-driver
+
+          # Copy artifacts from sample dectnrp-driver
+          cp ${{ env.BUILD_BASE }}/dectnrp-driver/dectnrp-driver/zephyr/sample-dectnrp-driver.elf ${{ env.PACKAGE_BASE }}/dectnrp-driver
+          cp ${{ env.BUILD_BASE }}/dectnrp-driver/dectnrp-driver/zephyr/sample-dectnrp-driver.hex ${{ env.PACKAGE_BASE }}/dectnrp-driver
+          cp ${{ env.BUILD_BASE }}/dectnrp-driver/dectnrp-driver/zephyr/sample-dectnrp-driver.map ${{ env.PACKAGE_BASE }}/dectnrp-driver
+          cp ${{ env.BUILD_BASE }}/dectnrp-driver/merged.hex ${{ env.PACKAGE_BASE }}/dectnrp-driver
+          cp ${{ env.BUILD_BASE }}/dectnrp-driver/partitions.yml ${{ env.PACKAGE_BASE }}/dectnrp-driver
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: opener-samples
+          path: ${{ env.PACKAGE_BASE }}
