@@ -18,7 +18,7 @@ jobs:
         with:
           python-version: "3.x"
 
-      - run: pip install -r clang-format.txt
+      - run: pip install clang-format -c constraints.txt
 
       - env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
