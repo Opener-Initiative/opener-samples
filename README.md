@@ -49,7 +49,7 @@ pip install west
 west init -l samples
 west update
 west zephyr-export
-west packages pip --install -- -c clang-format.txt
+west packages pip --install -- -c constraints.txt
 west sdk install
 ```
 
