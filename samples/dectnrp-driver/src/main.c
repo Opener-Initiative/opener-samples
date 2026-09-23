@@ -48,7 +48,11 @@ static struct remote_device {
 
 struct dectnrp_event_wrapper {
   void *fifo_reserved; /* 1st word reserved for use by FIFO */
+  /** Event issued by dectnrp-driver. */
   struct dectnrp_driver_event event;
+  /** Packet reference to received packet containing PCC and PDC. 
+     Only used/valid if event->code == DECTNRP_EVENT_MSG_RECEIVED. */
+  struct net_pkt *pkt;
 };
 
 /**
@@ -201,25 +205,27 @@ static int receive(struct net_if *iface, uint32_t duration_ms, bool *received) {
 
           if (event->code == DECTNRP_EVENT_MSG_RECEIVED) {
 
-            __ASSERT(event->msg_received.pcc != NULL,
-                     "event->msg_received.pcc == NULL");
-            __ASSERT(event->msg_received.pdc != NULL,
-                     "event->msg_received.pdc == NULL");
-            // LOG_ERR("EVENT_MSG_RECEIVED");
+            __ASSERT(item->pkt != NULL,
+                     "item->pkt == NULL");
 
             uint8_t pcc_len = event->msg_received.phy_type == 0
                                   ? DECTNRP_PHY_HEADER_TYPE1_SIZE
                                   : DECTNRP_PHY_HEADER_TYPE2_SIZE;
+            uint32_t pdc_len = event->msg_received.pdc_len;          
 
+            /* We just use a simple short cut and read pcc and pdc directly out of the packet. */
+            uint8_t *pcc = net_pkt_data(item->pkt);
+            uint8_t *pdc = &pcc[pcc_len];
             remote_device.short_device_id = pcc_decode_transmitter_short_id(
-                event->msg_received.pcc, pcc_len);
+                pcc, pcc_len);
             remote_device.last_start_time = event->msg_received.start_time;
             rx = true;
 
             // LOG_INF("RX:");
-            LOG_HEXDUMP_INF(event->msg_received.pcc, pcc_len, "RX:PCC:");
-            LOG_HEXDUMP_INF(event->msg_received.pdc,
-                            event->msg_received.pdc_len, "PDC:");
+            LOG_HEXDUMP_INF(pcc, pcc_len, "RX:PCC:");
+            LOG_HEXDUMP_INF(pdc, pdc_len, "PDC:");
+
+            net_pkt_unref(item->pkt);
 
           } else if (event->code == DECTNRP_EVENT_OP_FINISHED) {
             __ASSERT(event->op_finished.op != NULL,
