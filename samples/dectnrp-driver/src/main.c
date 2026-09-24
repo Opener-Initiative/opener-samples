@@ -50,7 +50,7 @@ struct dectnrp_event_wrapper {
   void *fifo_reserved; /* 1st word reserved for use by FIFO */
   /** Event issued by dectnrp-driver. */
   struct dectnrp_driver_event event;
-  /** Packet reference to received packet containing PCC and PDC. 
+  /** Packet reference to received packet containing PCC and PDC.
      Only used/valid if event->code == DECTNRP_EVENT_MSG_RECEIVED. */
   struct net_pkt *pkt;
 };
@@ -205,19 +205,19 @@ static int receive(struct net_if *iface, uint32_t duration_ms, bool *received) {
 
           if (event->code == DECTNRP_EVENT_MSG_RECEIVED) {
 
-            __ASSERT(item->pkt != NULL,
-                     "item->pkt == NULL");
+            __ASSERT(item->pkt != NULL, "item->pkt == NULL");
 
             uint8_t pcc_len = event->msg_received.phy_type == 0
                                   ? DECTNRP_PHY_HEADER_TYPE1_SIZE
                                   : DECTNRP_PHY_HEADER_TYPE2_SIZE;
-            uint32_t pdc_len = event->msg_received.pdc_len;          
+            uint32_t pdc_len = event->msg_received.pdc_len;
 
-            /* We just use a simple short cut and read pcc and pdc directly out of the packet. */
+            /* We just use a simple short cut and read pcc and pdc directly out
+             * of the packet. */
             uint8_t *pcc = net_pkt_data(item->pkt);
             uint8_t *pdc = &pcc[pcc_len];
-            remote_device.short_device_id = pcc_decode_transmitter_short_id(
-                pcc, pcc_len);
+            remote_device.short_device_id =
+                pcc_decode_transmitter_short_id(pcc, pcc_len);
             remote_device.last_start_time = event->msg_received.start_time;
             rx = true;
 
@@ -275,7 +275,7 @@ static int transmit(struct net_if *iface, const uint8_t *data, size_t size,
   struct net_pkt *pkt = net_pkt_alloc_with_buffer(iface, DECTNRP_MTU, AF_PACKET,
                                                   IPPROTO_RAW, K_MSEC(50));
   if (!pkt) {
-    NET_ERR("Could not allocate pkt");
+    LOG_ERR("Could not allocate pkt");
     ret = -ENOMEM;
   } else {
 

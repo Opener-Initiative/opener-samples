@@ -12,10 +12,11 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(dectnrp, CONFIG_SAMPLE_DRIVER_DECTNRP_LOG_LEVEL);
 
-#include <zephyr/net/dectnrp_driver.h>
-#include <zephyr/net/net_if.h>
 #include "dectnrp_driver_utils.h"
 #include "dectnrp_operation.h"
+#include <zephyr/net/dectnrp_driver.h>
+#include <zephyr/net/net_if.h>
+#include <zephyr/net/net_log.h>
 
 /* event fifo queue. */
 struct k_fifo dectnrp_event_fifo;
@@ -24,7 +25,7 @@ struct dectnrp_event_wrapper {
   void *fifo_reserved; /* 1st word reserved for use by FIFO */
   /** Event issued by dectnrp-driver. */
   struct dectnrp_driver_event event;
-  /** Packet reference to received packet containing PCC and PDC. 
+  /** Packet reference to received packet containing PCC and PDC.
      Only used/valid if event->code == DECTNRP_EVENT_MSG_RECEIVED. */
   struct net_pkt *pkt;
 };
@@ -54,20 +55,20 @@ static void dectnrp_driver_event(struct net_if *iface,
     } else if (event->code == DECTNRP_EVENT_MSG_RECEIVED) {
       NET_DBG("DECTNRP_EVENT_MSG_RECEIVED");
 
-      /* We need to copy received message (pcc + pdc) as the driver 'owns' 
+      /* We need to copy received message (pcc + pdc) as the driver 'owns'
        the memory and may re-use it after this event callback. */
       __ASSERT(event->msg_received.pcc != NULL,
-                "event->msg_received.pcc == NULL");
+               "event->msg_received.pcc == NULL");
       __ASSERT(event->msg_received.pdc != NULL,
-                "event->msg_received.pdc == NULL");
-      
+               "event->msg_received.pdc == NULL");
+
       uint8_t pcc_len = event->msg_received.phy_type == 0
-                                  ? DECTNRP_PHY_HEADER_TYPE1_SIZE
-                                  : DECTNRP_PHY_HEADER_TYPE2_SIZE;
+                            ? DECTNRP_PHY_HEADER_TYPE1_SIZE
+                            : DECTNRP_PHY_HEADER_TYPE2_SIZE;
       uint32_t packet_len = pcc_len + event->msg_received.pdc_len;
 
-      pkt = net_pkt_alloc_with_buffer(iface, packet_len, AF_PACKET,
-                                                  IPPROTO_RAW, K_MSEC(10));
+      pkt = net_pkt_alloc_with_buffer(iface, packet_len, AF_PACKET, IPPROTO_RAW,
+                                      K_MSEC(10));
       if (!pkt) {
         LOG_ERR("Failed to allocate rx pkt of length %d,drop data", packet_len);
         /* FIXME what to do in that case? */
@@ -80,7 +81,8 @@ static void dectnrp_driver_event(struct net_if *iface,
         net_pkt_unref(pkt);
         return;
       }
-      ret = net_pkt_write(pkt, event->msg_received.pdc, event->msg_received.pdc_len);
+      ret = net_pkt_write(pkt, event->msg_received.pdc,
+                          event->msg_received.pdc_len);
       if (ret < 0) {
         LOG_ERR("net_pkt_write(pdc) failed,%d,drop data", ret);
         net_pkt_unref(pkt);
