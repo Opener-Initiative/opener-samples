@@ -275,7 +275,7 @@ static int transmit(struct net_if *iface, const uint8_t *data, size_t size,
   struct net_pkt *pkt = net_pkt_alloc_with_buffer(iface, DECTNRP_MTU, AF_PACKET,
                                                   IPPROTO_RAW, K_MSEC(50));
   if (!pkt) {
-    NET_ERR("Could not allocate pkt");
+    LOG_ERR("Could not allocate pkt");
     ret = -ENOMEM;
   } else {
 

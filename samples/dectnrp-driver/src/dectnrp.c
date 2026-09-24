@@ -14,6 +14,7 @@ LOG_MODULE_REGISTER(dectnrp, CONFIG_SAMPLE_DRIVER_DECTNRP_LOG_LEVEL);
 
 #include <zephyr/net/dectnrp_driver.h>
 #include <zephyr/net/net_if.h>
+#include <zephyr/net/net_log.h>
 #include "dectnrp_driver_utils.h"
 #include "dectnrp_operation.h"
 
@@ -164,6 +165,13 @@ static int dectnrp_enable(struct net_if *iface, bool state) {
       ret = dectnrp_driver_stop(iface);
     }
   }
+
+  // at notify_iface_up() in we need a valid link address
+  // deps/zephyr/subsys/net/ip/net_if.c:5837
+  uint8_t link_addr[] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
+	net_if_set_link_addr(iface, link_addr, NET_LINK_ADDR_MAX_LENGTH,
+			     NET_LINK_DUMMY);
+
   return ret;
 }
 
