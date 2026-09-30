@@ -7,5 +7,8 @@ find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 project(dectnrp)
 
 target_sources(app PRIVATE
+    src/dectnrp.c
+    src/dectnrp_operation.c
+    src/dectnrp_mac_helper.c
     src/main.c
 )
