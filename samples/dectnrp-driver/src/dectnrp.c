@@ -22,12 +22,12 @@ LOG_MODULE_REGISTER(dectnrp, CONFIG_SAMPLE_DRIVER_DECTNRP_LOG_LEVEL);
 struct k_fifo dectnrp_event_fifo;
 
 struct dectnrp_event_wrapper {
-  void *fifo_reserved; /* 1st word reserved for use by FIFO */
-  /** Event issued by dectnrp-driver. */
-  struct dectnrp_driver_event event;
-  /** Packet reference to received packet containing PCC and PDC. 
-     Only used/valid if event->code == DECTNRP_EVENT_MSG_RECEIVED. */
-  struct net_pkt *pkt;
+	void *fifo_reserved; /* 1st word reserved for use by FIFO */
+	/** Event issued by dectnrp-driver. */
+	struct dectnrp_driver_event event;
+	/** Packet reference to received packet containing PCC and PDC.
+	   Only used/valid if event->code == DECTNRP_EVENT_MSG_RECEIVED. */
+	struct net_pkt *pkt;
 };
 
 /**
@@ -38,86 +38,87 @@ struct dectnrp_event_wrapper {
  * @param iface
  * @param event
  */
-static void dectnrp_driver_event(struct net_if *iface,
-                                 const struct dectnrp_driver_event *event) {
-  __ASSERT(event != NULL, "event == NULL");
+static void dectnrp_driver_event(struct net_if *iface, const struct dectnrp_driver_event *event)
+{
+	__ASSERT(event != NULL, "event == NULL");
 
-  struct net_pkt *pkt = NULL;
+	struct net_pkt *pkt = NULL;
 
-  switch (event->code) {
-  case DECTNRP_EVENT_MSG_ERROR:
-  case DECTNRP_EVENT_MSG_RECEIVED:
-  case DECTNRP_EVENT_OP_FINISHED:
-  case DECTNRP_EVENT_OP_RESULTS: {
+	switch (event->code) {
+	case DECTNRP_EVENT_MSG_ERROR:
+	case DECTNRP_EVENT_MSG_RECEIVED:
+	case DECTNRP_EVENT_OP_FINISHED:
+	case DECTNRP_EVENT_OP_RESULTS: {
 
-    if (event->code == DECTNRP_EVENT_MSG_ERROR) {
-      NET_DBG("DECTNRP_EVENT_MSG_ERROR");
-    } else if (event->code == DECTNRP_EVENT_MSG_RECEIVED) {
-      NET_DBG("DECTNRP_EVENT_MSG_RECEIVED");
+		if (event->code == DECTNRP_EVENT_MSG_ERROR) {
+			NET_DBG("DECTNRP_EVENT_MSG_ERROR");
+		} else if (event->code == DECTNRP_EVENT_MSG_RECEIVED) {
+			NET_DBG("DECTNRP_EVENT_MSG_RECEIVED");
 
-      /* We need to copy received message (pcc + pdc) as the driver 'owns' 
-       the memory and may re-use it after this event callback. */
-      __ASSERT(event->msg_received.pcc != NULL,
-                "event->msg_received.pcc == NULL");
-      __ASSERT(event->msg_received.pdc != NULL,
-                "event->msg_received.pdc == NULL");
-      
-      uint8_t pcc_len = event->msg_received.phy_type == 0
-                                  ? DECTNRP_PHY_HEADER_TYPE1_SIZE
-                                  : DECTNRP_PHY_HEADER_TYPE2_SIZE;
-      uint32_t packet_len = pcc_len + event->msg_received.pdc_len;
+			/* We need to copy received message (pcc + pdc) as the driver 'owns'
+			 the memory and may re-use it after this event callback. */
+			__ASSERT(event->msg_received.pcc != NULL,
+				 "event->msg_received.pcc == NULL");
+			__ASSERT(event->msg_received.pdc != NULL,
+				 "event->msg_received.pdc == NULL");
 
-      pkt = net_pkt_alloc_with_buffer(iface, packet_len, AF_PACKET,
-                                                  IPPROTO_RAW, K_MSEC(10));
-      if (!pkt) {
-        LOG_ERR("Failed to allocate rx pkt of length %d,drop data", packet_len);
-        /* FIXME what to do in that case? */
-        return;
-      }
+			uint8_t pcc_len = event->msg_received.phy_type == 0
+						  ? DECTNRP_PHY_HEADER_TYPE1_SIZE
+						  : DECTNRP_PHY_HEADER_TYPE2_SIZE;
+			uint32_t packet_len = pcc_len + event->msg_received.pdc_len;
 
-      int ret = net_pkt_write(pkt, event->msg_received.pcc, pcc_len);
-      if (ret < 0) {
-        LOG_ERR("net_pkt_write(pcc) failed,%d,drop data", ret);
-        net_pkt_unref(pkt);
-        return;
-      }
-      ret = net_pkt_write(pkt, event->msg_received.pdc, event->msg_received.pdc_len);
-      if (ret < 0) {
-        LOG_ERR("net_pkt_write(pdc) failed,%d,drop data", ret);
-        net_pkt_unref(pkt);
-        return;
-      }
+			pkt = net_pkt_alloc_with_buffer(iface, packet_len, AF_PACKET, IPPROTO_RAW,
+							K_MSEC(10));
+			if (!pkt) {
+				LOG_ERR("Failed to allocate rx pkt of length %d,drop data",
+					packet_len);
+				/* FIXME what to do in that case? */
+				return;
+			}
 
-    } else if (event->code == DECTNRP_EVENT_OP_FINISHED) {
-      NET_DBG("DECTNRP_EVENT_OP_FINISHED");
-    } else if (event->code == DECTNRP_EVENT_OP_RESULTS) {
-      NET_DBG("DECTNRP_EVENT_OP_RESULTS");
-    } else {
-      NET_DBG("code=%u", event->code);
-    }
+			int ret = net_pkt_write(pkt, event->msg_received.pcc, pcc_len);
+			if (ret < 0) {
+				LOG_ERR("net_pkt_write(pcc) failed,%d,drop data", ret);
+				net_pkt_unref(pkt);
+				return;
+			}
+			ret = net_pkt_write(pkt, event->msg_received.pdc,
+					    event->msg_received.pdc_len);
+			if (ret < 0) {
+				LOG_ERR("net_pkt_write(pdc) failed,%d,drop data", ret);
+				net_pkt_unref(pkt);
+				return;
+			}
 
-    struct dectnrp_event_wrapper *item =
-        k_malloc(sizeof(struct dectnrp_event_wrapper));
-    __ASSERT(item != NULL, "fifo_item == NULL");
+		} else if (event->code == DECTNRP_EVENT_OP_FINISHED) {
+			NET_DBG("DECTNRP_EVENT_OP_FINISHED");
+		} else if (event->code == DECTNRP_EVENT_OP_RESULTS) {
+			NET_DBG("DECTNRP_EVENT_OP_RESULTS");
+		} else {
+			NET_DBG("code=%u", event->code);
+		}
 
-    memcpy(&item->event, event, sizeof(struct dectnrp_driver_event));
+		struct dectnrp_event_wrapper *item = k_malloc(sizeof(struct dectnrp_event_wrapper));
+		__ASSERT(item != NULL, "fifo_item == NULL");
 
-    if (event->code == DECTNRP_EVENT_MSG_RECEIVED) {
-      item->pkt = pkt;
-      /** Invalidate original message pointers. */
-      item->event.msg_received.pcc = NULL;
-      item->event.msg_received.pdc = NULL;
-    }
+		memcpy(&item->event, event, sizeof(struct dectnrp_driver_event));
 
-    k_fifo_put(&dectnrp_event_fifo, (void *)item);
+		if (event->code == DECTNRP_EVENT_MSG_RECEIVED) {
+			item->pkt = pkt;
+			/** Invalidate original message pointers. */
+			item->event.msg_received.pcc = NULL;
+			item->event.msg_received.pdc = NULL;
+		}
 
-    break;
-  }
-  default: {
-    NET_WARN("unknown driver event, not handled, %u", event->code);
-    break;
-  }
-  }
+		k_fifo_put(&dectnrp_event_fifo, (void *)item);
+
+		break;
+	}
+	default: {
+		NET_WARN("unknown driver event, not handled, %u", event->code);
+		break;
+	}
+	}
 }
 
 /**
@@ -128,10 +129,10 @@ static void dectnrp_driver_event(struct net_if *iface,
  * @param pkt
  * @return enum net_verdict
  */
-static enum net_verdict dectnrp_recv(struct net_if *iface,
-                                     struct net_pkt *pkt) {
-  LOG_DBG("dectnrp_recv(%p)", iface);
-  return NET_DROP;
+static enum net_verdict dectnrp_recv(struct net_if *iface, struct net_pkt *pkt)
+{
+	LOG_DBG("dectnrp_recv(%p)", iface);
+	return NET_DROP;
 }
 
 /**
@@ -142,9 +143,10 @@ static enum net_verdict dectnrp_recv(struct net_if *iface,
  * @param pkt
  * @return int
  */
-static int dectnrp_send(struct net_if *iface, struct net_pkt *pkt) {
-  LOG_DBG("dectnrp_send(%p)", iface);
-  return -EIO;
+static int dectnrp_send(struct net_if *iface, struct net_pkt *pkt)
+{
+	LOG_DBG("dectnrp_send(%p)", iface);
+	return -EIO;
 }
 
 /**
@@ -155,24 +157,24 @@ static int dectnrp_send(struct net_if *iface, struct net_pkt *pkt) {
  * @param state
  * @return int
  */
-static int dectnrp_enable(struct net_if *iface, bool state) {
-  NET_DBG("iface %p %s", iface, state ? "up" : "down");
+static int dectnrp_enable(struct net_if *iface, bool state)
+{
+	NET_DBG("iface %p %s", iface, state ? "up" : "down");
 
-  int ret = 0;
-  if (state) {
-    ret = dectnrp_driver_start(iface);
-    if (ret != 0) {
-      ret = dectnrp_driver_stop(iface);
-    }
-  }
+	int ret = 0;
+	if (state) {
+		ret = dectnrp_driver_start(iface);
+		if (ret != 0) {
+			ret = dectnrp_driver_stop(iface);
+		}
+	}
 
-  // at notify_iface_up() in we need a valid link address
-  // deps/zephyr/subsys/net/ip/net_if.c:5837
-  uint8_t link_addr[] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
-	net_if_set_link_addr(iface, link_addr, NET_LINK_ADDR_MAX_LENGTH,
-			     NET_LINK_DUMMY);
+	// at notify_iface_up() in we need a valid link address
+	// deps/zephyr/subsys/net/ip/net_if.c:5837
+	uint8_t link_addr[] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
+	net_if_set_link_addr(iface, link_addr, NET_LINK_ADDR_MAX_LENGTH, NET_LINK_DUMMY);
 
-  return ret;
+	return ret;
 }
 
 /**
@@ -181,17 +183,17 @@ static int dectnrp_enable(struct net_if *iface, bool state) {
  * @param iface
  * @return enum net_l2_flags
  */
-static enum net_l2_flags dectnrp_flags(struct net_if *iface) {
-  LOG_DBG("dectnrp_flags(%p)", iface);
-  struct dectnrp_context *ctx = net_if_l2_data(iface);
-  /* No need for locking as these flags as they are set once
-   * during L2 initialization and then never changed.
-   */
-  return ctx->flags;
+static enum net_l2_flags dectnrp_flags(struct net_if *iface)
+{
+	LOG_DBG("dectnrp_flags(%p)", iface);
+	struct dectnrp_context *ctx = net_if_l2_data(iface);
+	/* No need for locking as these flags as they are set once
+	 * during L2 initialization and then never changed.
+	 */
+	return ctx->flags;
 }
 
-NET_L2_INIT(DECTNRP_L2, dectnrp_recv, dectnrp_send, dectnrp_enable,
-            dectnrp_flags);
+NET_L2_INIT(DECTNRP_L2, dectnrp_recv, dectnrp_send, dectnrp_enable, dectnrp_flags);
 
 /**
  * @brief dectnrp_stack initialization callback.
@@ -201,20 +203,21 @@ NET_L2_INIT(DECTNRP_L2, dectnrp_recv, dectnrp_send, dectnrp_enable,
  *
  * @param iface
  */
-void dectnrp_l2_init(struct net_if *iface) {
-  struct dectnrp_context *ctx = net_if_l2_data(iface);
-  LOG_DBG("dectnrp_l2_init(%p)", iface);
+void dectnrp_l2_init(struct net_if *iface)
+{
+	struct dectnrp_context *ctx = net_if_l2_data(iface);
+	LOG_DBG("dectnrp_l2_init(%p)", iface);
 
-  ctx->flags = NET_L2_MULTICAST;
-  if (dectnrp_driver_get_hw_capabilities(iface) && DECTNRP_HW_PROMISC) {
-    ctx->flags |= NET_L2_PROMISC_MODE;
-  }
-  ctx->iface = iface;
+	ctx->flags = NET_L2_MULTICAST;
+	if (dectnrp_driver_get_hw_capabilities(iface) && DECTNRP_HW_PROMISC) {
+		ctx->flags |= NET_L2_PROMISC_MODE;
+	}
+	ctx->iface = iface;
 
-  k_fifo_init(&dectnrp_event_fifo);
+	k_fifo_init(&dectnrp_event_fifo);
 
-  dectnrp_driver_register_event_handler(iface, dectnrp_driver_event);
+	dectnrp_driver_register_event_handler(iface, dectnrp_driver_event);
 
-  LOG_DBG("L2 interface initialized");
-  return;
+	LOG_DBG("L2 interface initialized");
+	return;
 }
