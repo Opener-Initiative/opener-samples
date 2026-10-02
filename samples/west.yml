@@ -27,7 +27,7 @@ manifest:
     - name: zephyr
       remote: ncs
       repo-path: sdk-zephyr
-      revision: ncs-v3.2.4
+      revision: ncs-v3.4.0
       import:
         path-prefix: deps
         path-blocklist:
@@ -38,12 +38,13 @@ manifest:
           - zcbor
           - tinycrypt
           - segger
+          - tf-psa-crypto
 
     - name: nrf
       remote: ncs
       repo-path: sdk-nrf
       # Always use git tag or commit hash as a revision
-      revision: v3.2.4
+      revision: v3.4.0
       import:
         path-prefix: deps
         path-blocklist:

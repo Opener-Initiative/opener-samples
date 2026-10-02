@@ -6,7 +6,7 @@
 	],
 	"settings": {
 		// settings for override in user .vscode/settings.json
-		"zephyrSdkPath": "${userHome}/zephyr-sdk-0.17.4",
+		"zephyrSdkPath": "${userHome}/zephyr-sdk-1.0.1/gnu",
 		"build-folder": "${workspaceFolder}/build/",
 		"python.terminal.activateEnvironment": true,
 		"python.venvPath": "${workspaceFolder}/.venv",
@@ -32,9 +32,34 @@
 		"cmake.configureOnOpen": false,
 		// IntelliSense
 		"C_Cpp.errorSquiggles": "enabled",
-		"C_Cpp.default.compilerPath": "${config:zephyrSdkPath}/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc",
-		"C_Cpp.default.compileCommands": "${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp-driver/dectnrp-driver/compile_commands.json",
+		"C_Cpp.default.compilerPath": "${zephyrSdkPath}/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc",
+		"C_Cpp.default.compileCommands": "${workspaceFolder}/build/nrf9151dk/nrf9151/ns/dectnrp-driver/compile_commands.json",
 		"C_Cpp.clang_format_path": "${workspaceFolder}/.venv/bin/clang-format",
+
+		// It seems currently not possible to override "C_Cpp.intelliSenseEngine" via .vscode/settings.json.
+		// - When you want to use IntelliSense:
+		//   * disable potentially installed clangd extension
+		//   * deactivate "C_Cpp.intelliSenseEngine": "disabled"
+		//   * activate the following line: 
+		"C_Cpp.intelliSenseEngine": "default",
+		// - When you want to use clangd:
+		//   * attention: Custom config variables through ${config:...} macro syntax seems not to work within "clangd.arguments".
+		//   * install clangd `sudo apt-get install clangd-20`
+		//   * install vscode clangd extension
+		//   * deactivate "C_Cpp.intelliSenseEngine": "default"
+		//   * activate the following line: 
+		// "C_Cpp.intelliSenseEngine": "disabled",
+		"clangd.arguments": [
+			"--pretty",
+			"--enable-config",
+			"--background-index",
+			"--compile-commands-dir=${workspaceFolder}/build/nrf9151dk/nrf9151/ns/dectnrp-driver",
+			"--query-driver=${userHome}/zephyr-sdk-1.0.1/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-*",
+			//"--log=verbose",
+			"--log=error"
+		],
+		"clangd.checkUpdates": false,
+
 		// File Associations
 		"files.associations": {
 			"*.h": "c",
@@ -111,9 +136,9 @@
 				"name": "Device(launch)",
 				"type": "cortex-debug",
 				"device": "NRF9151_xxca",
-				"executable": "${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp-driver/dectnrp-driver/zephyr/sample-dectnrp-driver.elf",
+				"executable": "${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp-driver/zephyr/sample-dectnrp-driver.elf",
 				"loadFiles": [
-					"${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp-driver/merged.hex"
+					"${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp-driver/zephyr/tfm_merged.hex"
 				],
 				"cwd": "${workspaceFolder}",
 				"rtos": "Zephyr",
@@ -144,9 +169,9 @@
 				"name": "Device1(launch)",
 				"type": "cortex-debug",
 				"device": "NRF9151_xxca",
-				"executable": "${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp-driver/dectnrp-driver/zephyr/sample-dectnrp-driver.elf",
+				"executable": "${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp-driver/zephyr/sample-dectnrp-driver.elf",
 				"loadFiles": [
-					"${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp-driver/merged.hex"
+					"${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp-driver/zephyr/tfm_merged.hex"
 				],
 				"cwd": "${workspaceFolder}",
 				"rtos": "Zephyr",
@@ -178,9 +203,9 @@
 				"name": "Device2(launch)",
 				"type": "cortex-debug",
 				"device": "NRF9151_xxca",
-				"executable": "${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp-driver/dectnrp-driver/zephyr/sample-dectnrp-driver.elf",
+				"executable": "${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp-driver/zephyr/sample-dectnrp-driver.elf",
 				"loadFiles": [
-					"${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp-driver/merged.hex"
+					"${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp-driver/zephyr/tfm_merged.hex"
 				],
 				"cwd": "${workspaceFolder}",
 				"rtos": "Zephyr",

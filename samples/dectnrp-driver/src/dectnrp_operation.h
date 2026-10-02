@@ -21,9 +21,8 @@
  * op.
  * @return int 0 if no error occured.
  */
-int dectnrp_alloc_tx_operation(struct dectnrp_driver_op **new_op,
-                               struct net_if *iface, uint16_t channel,
-                               struct net_pkt *pkt);
+int dectnrp_alloc_tx_operation(struct dectnrp_driver_op **new_op, struct net_if *iface,
+			       uint16_t channel, struct net_pkt *pkt);
 
 /**
  * @brief Allocate a new rx operation \p op and preset its values.
@@ -33,8 +32,8 @@ int dectnrp_alloc_tx_operation(struct dectnrp_driver_op **new_op,
  * op.
  * @return int 0 if no error occured.
  */
-int dectnrp_alloc_rx_operation(struct dectnrp_driver_op **op,
-                               struct net_if *iface, uint16_t channel);
+int dectnrp_alloc_rx_operation(struct dectnrp_driver_op **op, struct net_if *iface,
+			       uint16_t channel);
 
 /**
  * @brief Allocate a new rssi1 operation \p op and preset its values.
@@ -49,10 +48,9 @@ int dectnrp_alloc_rx_operation(struct dectnrp_driver_op **op,
  * op.
  * @return int 0 if no error occured.
  */
-int dectnrp_alloc_rssi1_operation(struct dectnrp_driver_op **new_op,
-                                  struct net_if *iface, uint16_t channel,
-                                  net_time_t start_time, uint32_t subslots,
-                                  struct dectnrp_rssi1_result *result);
+int dectnrp_alloc_rssi1_operation(struct dectnrp_driver_op **new_op, struct net_if *iface,
+				  uint16_t channel, net_time_t start_time, uint32_t subslots,
+				  struct dectnrp_rssi1_result *result);
 
 /**
  * @brief Free the given operation \p op.
