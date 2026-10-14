@@ -90,6 +90,10 @@ manifest:
       revision: main
       path: deps/dectnrp-opener
 
+    - name: codz-sdk
+      url: https://github.com/codium-electronique/codz-sdk.git
+      revision: main
+      path: deps/codz-sdk
 
   self:
     path: app
