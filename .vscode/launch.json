@@ -1,0 +1,66 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Debug dectnrp-driver",
+			"type": "cortex-debug",
+			"request": "launch",
+			"preLaunchTask": "Build dectnrp-driver",
+			"servertype": "jlink",
+			"interface": "swd",
+			"device": "NRF9151_xxca",
+			"serverArgs": [
+				"-speed",
+				"4000"
+			],
+			"armToolchainPath": "${config:opener.zephyrSdkPath}/arm-zephyr-eabi/bin",
+			"toolchainPrefix": "arm-zephyr-eabi",
+			"executable": "${workspaceFolder}/build/nrf9151dk/nrf9151/ns/dectnrp-driver/dectnrp-driver/zephyr/sample-dectnrp-driver.elf",
+			"loadFiles": [
+				"${workspaceFolder}/build/nrf9151dk/nrf9151/ns/dectnrp-driver/dectnrp-driver/zephyr/tfm_merged.hex"
+			],
+			"svdPath": "${workspaceFolder}/deps/modules/hal/nordic/nrfx/bsp/stable/mdk/nrf9120.svd",
+			"rtos": "Zephyr",
+			"runToEntryPoint": "main",
+			"rttConfig": {
+				"enabled": true,
+				"address": "auto",
+				"decoders": [
+					{
+						"label": "RTT",
+						"port": 0,
+						"type": "console"
+					}
+				]
+			}
+		},
+		{
+			"name": "Attach dectnrp-driver",
+			"type": "cortex-debug",
+			"request": "attach",
+			"servertype": "jlink",
+			"interface": "swd",
+			"device": "NRF9151_xxca",
+			"serverArgs": [
+				"-speed",
+				"4000"
+			],
+			"armToolchainPath": "${config:opener.zephyrSdkPath}/arm-zephyr-eabi/bin",
+			"toolchainPrefix": "arm-zephyr-eabi",
+			"executable": "${workspaceFolder}/build/nrf9151dk/nrf9151/ns/dectnrp-driver/dectnrp-driver/zephyr/sample-dectnrp-driver.elf",
+			"svdPath": "${workspaceFolder}/deps/modules/hal/nordic/nrfx/bsp/stable/mdk/nrf9120.svd",
+			"rtos": "Zephyr",
+			"rttConfig": {
+				"enabled": true,
+				"address": "auto",
+				"decoders": [
+					{
+						"label": "RTT",
+						"port": 0,
+						"type": "console"
+					}
+				]
+			}
+		}
+	]
+}

@@ -1,0 +1,8 @@
+{
+	"recommendations": [
+		"marus25.cortex-debug",
+		"ms-python.python",
+		"ms-vscode.vscode-serial-monitor",
+		"streetsidesoftware.code-spell-checker"
+	]
+}

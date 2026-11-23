@@ -1,0 +1,71 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build dectnrp-driver",
+			"type": "process",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"-m",
+				"west",
+				"build",
+				"--sysbuild",
+				"-b",
+				"nrf9151dk/nrf9151/ns",
+				"-d",
+				"${workspaceFolder}/build/nrf9151dk/nrf9151/ns/dectnrp-driver",
+				"${workspaceFolder}/samples/dectnrp-driver"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": {
+				"base": "$gcc",
+				"fileLocation": [
+					"autoDetect",
+					"${workspaceFolder}"
+				]
+			}
+		},
+		{
+			"label": "Pristine build dectnrp-driver",
+			"type": "process",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"-m",
+				"west",
+				"build",
+				"-p",
+				"always",
+				"--sysbuild",
+				"-b",
+				"nrf9151dk/nrf9151/ns",
+				"-d",
+				"${workspaceFolder}/build/nrf9151dk/nrf9151/ns/dectnrp-driver",
+				"${workspaceFolder}/samples/dectnrp-driver"
+			],
+			"group": "build",
+			"problemMatcher": {
+				"base": "$gcc",
+				"fileLocation": [
+					"autoDetect",
+					"${workspaceFolder}"
+				]
+			}
+		},
+		{
+			"label": "Flash dectnrp-driver",
+			"type": "process",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"-m",
+				"west",
+				"flash",
+				"-d",
+				"${workspaceFolder}/build/nrf9151dk/nrf9151/ns/dectnrp-driver"
+			],
+			"problemMatcher": []
+		}
+	]
+}

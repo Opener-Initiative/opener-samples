@@ -1,0 +1,38 @@
+{
+	// Multi-root workspace for opener-samples and the opener out-of-tree
+	// Zephyr module checked out by west into deps/dectnrp-opener.
+	//
+	// Project settings, tasks and launch configurations live in .vscode/ so
+	// they also apply when the folder is opened directly instead of via this
+	// workspace file.
+	"folders": [
+		{
+			"name": "opener-samples",
+			"path": "."
+		},
+		{
+			"name": "opener",
+			"path": "deps/dectnrp-opener"
+		}
+	],
+	"settings": {
+		// Same editor settings as in .vscode/settings.json; needed here so
+		// they also apply to deps/dectnrp-opener.
+		"files.associations": {
+			"*.h": "c"
+		},
+		"files.eol": "\n",
+		"files.insertFinalNewline": true,
+		"files.trimTrailingWhitespace": true,
+		"[markdown]": {
+			"files.trimTrailingWhitespace": false
+		},
+		"[c]": {
+			"editor.insertSpaces": false,
+			"editor.tabSize": 8,
+			"editor.rulers": [
+				100
+			]
+		}
+	}
+}
