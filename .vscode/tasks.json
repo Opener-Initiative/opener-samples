@@ -4,7 +4,10 @@
 		{
 			"label": "Build dectnrp-driver",
 			"type": "process",
-			"command": "${command:python.interpreterPath}",
+			"command": "${workspaceFolder}/.venv/bin/python",
+			"windows": {
+				"command": "${workspaceFolder}/.venv/Scripts/python.exe"
+			},
 			"args": [
 				"-m",
 				"west",
@@ -31,7 +34,10 @@
 		{
 			"label": "Pristine build dectnrp-driver",
 			"type": "process",
-			"command": "${command:python.interpreterPath}",
+			"command": "${workspaceFolder}/.venv/bin/python",
+			"windows": {
+				"command": "${workspaceFolder}/.venv/Scripts/python.exe"
+			},
 			"args": [
 				"-m",
 				"west",
@@ -57,7 +63,10 @@
 		{
 			"label": "Flash dectnrp-driver",
 			"type": "process",
-			"command": "${command:python.interpreterPath}",
+			"command": "${workspaceFolder}/.venv/bin/python",
+			"windows": {
+				"command": "${workspaceFolder}/.venv/Scripts/python.exe"
+			},
 			"args": [
 				"-m",
 				"west",
