@@ -127,6 +127,20 @@
 					"$python"
 				]
 			},
+			{
+				"label": "Build dectnrp sample",
+				"type": "shell",
+				"group": {
+					"kind": "build",
+					"isDefault": true
+				},
+				"linux": {
+					"command": ".venv/bin/west build -b nrf9151dk/nrf9151/ns -d ${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp/ samples/dectnrp/"
+				},
+				"problemMatcher": [
+					"$gcc"
+				]
+			},
 		]
 	},
 	"launch": {
@@ -227,6 +241,39 @@
 					"decoders": [
 						{
 							"label": "Device2",
+							"port": 0,
+							"type": "console"
+						}
+					]
+				},
+			},
+			{
+				"name": "L2 Test(launch)",
+				"type": "cortex-debug",
+				"device": "NRF9151_xxca",
+				"executable": "${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp/zephyr/sample-dectnrp.elf",
+				"loadFiles": [
+					"${config:build-folder}/nrf9151dk/nrf9151/ns/dectnrp/zephyr/tfm_merged.hex"
+				],
+				"cwd": "${workspaceFolder}",
+				"rtos": "Zephyr",
+				"request": "launch",
+				"runToEntryPoint": "main",
+				"servertype": "jlink",
+				"interface": "swd",
+				"serverArgs": [
+					"-speed",
+					"4000",
+				],
+				"gdbPath": "${config:zephyrSdkPath}/arm-zephyr-eabi/bin/arm-zephyr-eabi-gdb",
+				"svdPath": "${workspaceFolder}/deps/modules/hal/nordic/nrfx/mdk/nrf9120.svd",
+				//"showDevDebugOutput": "raw",
+				"rttConfig": { // this automatically opens a rtt viewer terminal
+					"enabled": true,
+					"address": "auto",
+					"decoders": [
+						{
+							"label": "Device",
 							"port": 0,
 							"type": "console"
 						}

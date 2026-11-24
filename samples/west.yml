@@ -87,7 +87,7 @@ manifest:
       remote: dectnrp
       repo-path: opener
       # Always use git tag or commit hash as a revision
-      revision: main
+      revision: dectnrp_l2_first_shot
       path: deps/dectnrp-opener
 
     - name: codz-sdk

@@ -1,0 +1,3 @@
+#include "nrf91x1_partition_without_bootloader.dtsi"
+#include "nrf91x1_dect_modem.dtsi"
+
