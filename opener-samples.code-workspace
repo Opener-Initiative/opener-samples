@@ -33,6 +33,13 @@
 			"editor.rulers": [
 				100
 			]
-		}
+		},
+		// Same IntelliSense settings as in .vscode/settings.json; needed here
+		// so they apply to all folders in the multi-root workspace.
+		"C_Cpp.intelliSenseEngine": "disabled",
+		"clangd.arguments": [
+			"--query-driver=**/*-zephyr-*",
+			"--header-insertion=never"
+		]
 	}
 }

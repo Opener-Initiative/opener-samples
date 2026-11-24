@@ -18,5 +18,12 @@
 		"editor.rulers": [
 			100
 		]
-	}
+	},
+	// Set up IntelliSense via clangd; keep settings in sync with
+	// opener-samples.code-workspace. The compile database is set in .clangd.
+	"C_Cpp.intelliSenseEngine": "disabled",
+	"clangd.arguments": [
+		"--query-driver=**/*-zephyr-*",
+		"--header-insertion=never"
+	]
 }
