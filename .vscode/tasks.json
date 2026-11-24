@@ -75,6 +75,26 @@
 				"${workspaceFolder}/build/nrf9151dk/nrf9151/ns/dectnrp-driver"
 			],
 			"problemMatcher": []
+		},
+		{
+			// Uses clang-format from the venv (i.e., the version pinned in
+			// constraints.txt, which is also the one used in CI)
+			"label": "Format current file",
+			"type": "process",
+			"command": "${workspaceFolder}/.venv/bin/python",
+			"windows": {
+				"command": "${workspaceFolder}/.venv/Scripts/python.exe"
+			},
+			"args": [
+				"-c",
+				"import sys, clang_format\nif not sys.argv[-1].endswith(('.c', '.h')): sys.exit('Not a C source or header: ' + sys.argv[-1])\nclang_format.clang_format()",
+				"-i",
+				"${file}"
+			],
+			"presentation": {
+				"reveal": "silent"
+			},
+			"problemMatcher": []
 		}
 	]
 }
