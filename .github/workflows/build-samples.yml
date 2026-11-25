@@ -33,12 +33,12 @@ jobs:
           ccache-cache-key: ${{ runner.os }}
 
       - name: Build samples/dectnrp-driver
-        run: west build -p always -b nrf9151dk/nrf9151/ns -d ${BUILD_BASE}/ samples/dectnrp-driver/
+        run: west build -p always -b nrf9151dk/nrf9151/ns -d ${BUILD_BASE}/dectnrp-driver samples/dectnrp-driver/
         env:
           ZEPHYR_TOOLCHAIN_VARIANT: zephyr
 
       - name: Build samples/dectnrp
-        run: west build -p always -b nrf9151dk/nrf9151/ns -d ${BUILD_BASE}/ samples/dectnrp/
+        run: west build -p always -b nrf9151dk/nrf9151/ns -d ${BUILD_BASE}/dectnrp samples/dectnrp/
         env:
           ZEPHYR_TOOLCHAIN_VARIANT: zephyr
 
