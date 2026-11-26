@@ -1,23 +1,29 @@
 {
+	// The configurations debug the active target (sample + board), see
+	// scripts/target.py. It copies the target's ELF, hex file and J-Link
+	// script to build/active.*. device and svdPath depend on the chip, so
+	// there is one pair of configurations per chip.
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Debug dectnrp-driver",
+			"name": "Debug (nRF9151)",
 			"type": "cortex-debug",
 			"request": "launch",
-			"preLaunchTask": "Build dectnrp-driver",
+			"preLaunchTask": "Build",
 			"servertype": "jlink",
 			"interface": "swd",
 			"device": "NRF9151_xxca",
 			"serverArgs": [
 				"-speed",
-				"4000"
+				"4000",
+				"-jlinkscriptfile",
+				"${workspaceFolder}/build/active.JLinkScript"
 			],
 			"armToolchainPath": "${config:opener.zephyrSdkPath}/arm-zephyr-eabi/bin",
 			"toolchainPrefix": "arm-zephyr-eabi",
-			"executable": "${workspaceFolder}/build/nrf9151dk/nrf9151/ns/dectnrp-driver/dectnrp-driver/zephyr/sample-dectnrp-driver.elf",
+			"executable": "${workspaceFolder}/build/active.elf",
 			"loadFiles": [
-				"${workspaceFolder}/build/nrf9151dk/nrf9151/ns/dectnrp-driver/dectnrp-driver/zephyr/tfm_merged.hex"
+				"${workspaceFolder}/build/active.hex"
 			],
 			"svdPath": "${workspaceFolder}/deps/modules/hal/nordic/nrfx/bsp/stable/mdk/nrf9120.svd",
 			"rtos": "Zephyr",
@@ -35,7 +41,7 @@
 			}
 		},
 		{
-			"name": "Attach dectnrp-driver",
+			"name": "Attach (nRF9151)",
 			"type": "cortex-debug",
 			"request": "attach",
 			"servertype": "jlink",
@@ -43,11 +49,13 @@
 			"device": "NRF9151_xxca",
 			"serverArgs": [
 				"-speed",
-				"4000"
+				"4000",
+				"-jlinkscriptfile",
+				"${workspaceFolder}/build/active.JLinkScript"
 			],
 			"armToolchainPath": "${config:opener.zephyrSdkPath}/arm-zephyr-eabi/bin",
 			"toolchainPrefix": "arm-zephyr-eabi",
-			"executable": "${workspaceFolder}/build/nrf9151dk/nrf9151/ns/dectnrp-driver/dectnrp-driver/zephyr/sample-dectnrp-driver.elf",
+			"executable": "${workspaceFolder}/build/active.elf",
 			"svdPath": "${workspaceFolder}/deps/modules/hal/nordic/nrfx/bsp/stable/mdk/nrf9120.svd",
 			"rtos": "Zephyr",
 			"rttConfig": {

@@ -1,23 +1,35 @@
 {
+	// The tasks work on the active target (sample + board), see
+	// scripts/target.py. Select it with the "Select target" task or with
+	// `python scripts/target.py select` on the command line.
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Build dectnrp-driver",
+			"label": "Select target",
 			"type": "process",
 			"command": "${workspaceFolder}/.venv/bin/python",
 			"windows": {
 				"command": "${workspaceFolder}/.venv/Scripts/python.exe"
 			},
 			"args": [
-				"-m",
-				"west",
-				"build",
-				"--sysbuild",
-				"-b",
-				"nrf9151dk/nrf9151/ns",
-				"-d",
-				"${workspaceFolder}/build/nrf9151dk/nrf9151/ns/dectnrp-driver",
-				"${workspaceFolder}/samples/dectnrp-driver"
+				"${workspaceFolder}/scripts/target.py",
+				"select"
+			],
+			"presentation": {
+				"focus": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Build",
+			"type": "process",
+			"command": "${workspaceFolder}/.venv/bin/python",
+			"windows": {
+				"command": "${workspaceFolder}/.venv/Scripts/python.exe"
+			},
+			"args": [
+				"${workspaceFolder}/scripts/target.py",
+				"build"
 			],
 			"group": {
 				"kind": "build",
@@ -32,24 +44,17 @@
 			}
 		},
 		{
-			"label": "Pristine build dectnrp-driver",
+			"label": "Pristine build",
 			"type": "process",
 			"command": "${workspaceFolder}/.venv/bin/python",
 			"windows": {
 				"command": "${workspaceFolder}/.venv/Scripts/python.exe"
 			},
 			"args": [
-				"-m",
-				"west",
+				"${workspaceFolder}/scripts/target.py",
 				"build",
 				"-p",
-				"always",
-				"--sysbuild",
-				"-b",
-				"nrf9151dk/nrf9151/ns",
-				"-d",
-				"${workspaceFolder}/build/nrf9151dk/nrf9151/ns/dectnrp-driver",
-				"${workspaceFolder}/samples/dectnrp-driver"
+				"always"
 			],
 			"group": "build",
 			"problemMatcher": {
@@ -61,19 +66,52 @@
 			}
 		},
 		{
-			"label": "Flash dectnrp-driver",
+			"label": "Build all",
 			"type": "process",
 			"command": "${workspaceFolder}/.venv/bin/python",
 			"windows": {
 				"command": "${workspaceFolder}/.venv/Scripts/python.exe"
 			},
 			"args": [
-				"-m",
-				"west",
-				"flash",
-				"-d",
-				"${workspaceFolder}/build/nrf9151dk/nrf9151/ns/dectnrp-driver"
+				"${workspaceFolder}/scripts/target.py",
+				"build-all"
 			],
+			"group": "build",
+			"problemMatcher": {
+				"base": "$gcc",
+				"fileLocation": [
+					"autoDetect",
+					"${workspaceFolder}"
+				]
+			}
+		},
+		{
+			"label": "Flash",
+			"type": "process",
+			"command": "${workspaceFolder}/.venv/bin/python",
+			"windows": {
+				"command": "${workspaceFolder}/.venv/Scripts/python.exe"
+			},
+			"args": [
+				"${workspaceFolder}/scripts/target.py",
+				"flash"
+			],
+			"problemMatcher": []
+		},
+		{
+			"label": "RTT console",
+			"type": "process",
+			"command": "${workspaceFolder}/.venv/bin/python",
+			"windows": {
+				"command": "${workspaceFolder}/.venv/Scripts/python.exe"
+			},
+			"args": [
+				"${workspaceFolder}/scripts/target.py",
+				"rtt"
+			],
+			"presentation": {
+				"focus": true
+			},
 			"problemMatcher": []
 		},
 		{
