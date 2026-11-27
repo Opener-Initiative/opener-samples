@@ -1,20 +1,10 @@
 # 📡 Opener Samples
 
-Reference applications and sample projects for the **Opener DECT-2020 NR protocol stack implementation**.
+This repository contains reference applications built on top of the [Opener DECT-2020 NR protocol stack implementation](https://github.com/Opener-Initiative/opener), which is provided under the Apache 2.0 license.
 
-> **Note**
->
-> This repository contains reference applications built on top of the
-> [Opener DECT-2020 NR protocol stack implementation](https://github.com/Opener-Initiative/opener),
-> which is provided under the Apache 2.0 license.
+## 🚀 Getting Started
 
-[[*TOC*]]
-
----
-
-# 🚀 Getting Started
-
-## 📋 Prerequisites
+### Prerequisites
 
 Before building the samples, install the following tools:
 
@@ -24,19 +14,17 @@ Before building the samples, install the following tools:
 
 2. **Zephyr Development Environment**
 
-   Follow these steps from the Zephyr *Getting Started* guide:
+   Follow these steps from the [Zephyr *Getting Started* guide](https://docs.zephyrproject.org/latest/develop/getting_started/index.html):
 
    * Select and update your operating system
    * Install all required dependencies
-
-   https://docs.zephyrproject.org/latest/develop/getting_started/index.html
 
 3. **nRF Util** with the `device` command (used for flashing the modem firmware and applications)
 
    * https://www.nordicsemi.com/Products/Development-tools/nRF-Util
    * `nrfutil install device`
 
-## ⚙️ Repository Setup
+### Repository Setup
 
 Create the Python virtual environment as `.venv` in the repository root and initialize the west workspace:
 
@@ -55,7 +43,7 @@ west sdk install
 
 `west sdk install` downloads and installs the Zephyr SDK version that matches the Zephyr revision in `samples/west.yml`, so no separate SDK installation is needed.
 
-## 📟 Board Setup
+### Board Setup
 
 Program the DECT NR+ modem firmware once per board:
 
@@ -69,13 +57,11 @@ With several J-Links connected, select one with `--serial-number <serial>`.
 
 For the Codium boards (connection and first-time setup), see the [README in codz-sdk](https://github.com/codium-electronique/codz-sdk/blob/main/README.md), which west checks out in `deps/codz-sdk/`.
 
----
-
-# 🔨 Building and Flashing
+## 🔨 Building and Flashing
 
 Samples can be built with the helper script or with plain west. Both write to the same build folder, `build/<board>/<sample>`, so you can switch between them, e.g. build with the helper script and then flash with west. Only the helper script tracks the active target and updates the copies of its build outputs that VS Code uses for debugging and IntelliSense (see the VS Code section).
 
-## Helper Script
+### Helper Script
 
 `scripts/target.py` stores the active target (sample + board) in `build/active.json`. All further commands, and the VS Code tasks, work on that target. Only the boards listed under `platform_allow` in a sample's `sample.yaml` can be selected for that sample.
 
@@ -93,7 +79,7 @@ python scripts/target.py build-all        # build all samples for all their boar
 
 `select` also accepts the sample and board directly, e.g. `select dectnrp-driver cod_nrp_node/nrf9151/ns`. Further arguments to the other commands are passed to west, e.g. `build -- -DCONFIG_LOG=n` or `flash --dev-id <serial>`. `python scripts/target.py --help` lists all commands.
 
-## Plain West
+### Plain West
 
 Build a sample application using:
 
@@ -101,7 +87,7 @@ Build a sample application using:
 west build -p always -b <board-name> -d <build-folder> samples/<example>/
 ```
 
-For example following command builds dectnrp-driver sample:
+For example, the following command builds the dectnrp-driver sample:
 
 ```bash
 west build -p always -b nrf9151dk/nrf9151/ns -d build/nrf9151dk/nrf9151/ns/dectnrp-driver/ samples/dectnrp-driver/
@@ -113,9 +99,9 @@ Flash it with:
 west flash -d build/nrf9151dk/nrf9151/ns/dectnrp-driver/
 ```
 
-The same `-d` option can also be passed to `west debug`, `west attach` and `west rtt`. With several J-Links connected, select one with `--dev-id <serial>`.
+The same `-d` option can also be passed to `west debug`, `west attach`, and `west rtt`. With several J-Links connected, select one with `--dev-id <serial>`.
 
-## ⚡ Optional: Configure West
+### Optional: Configure West
 
 To simplify future build commands, configure **west** once:
 
@@ -137,15 +123,11 @@ Afterwards, builds can be started with a shorter command, which builds into the 
 west build -b nrf9151dk/nrf9151/ns samples/dectnrp-driver/
 ```
 
-For additional configuration options, refer to the Zephyr documentation:
+For additional configuration options, refer to the [Zephyr documentation](https://docs.zephyrproject.org/latest/develop/west/build-flash-debug.html#configuration-options).
 
-https://docs.zephyrproject.org/latest/develop/west/build-flash-debug.html#configuration-options
+## 💻 VS Code
 
----
-
-# 💻 VS Code
-
-Open `opener-samples.code-workspace` and install the recommended extensions. Building and flashing only need the Python virtual environment in `.venv`; IntelliSense needs **clangd**, debugging needs **Cortex-Debug**.
+Open `opener-samples.code-workspace` and install the recommended extensions. Building and flashing only need the Python virtual environment in `.venv`; IntelliSense needs **clangd**, and debugging needs **Cortex-Debug**.
 
 * **Tasks**: run them from *Terminal → Run Task* or via *Tasks: Run Task* from the Command Palette (Ctrl+Shift+P, Cmd+Shift+P on macOS).
   * *Select target*: choose the sample and board to work on.
@@ -161,35 +143,31 @@ Open `opener-samples.code-workspace` and install the recommended extensions. Bui
 
 Running `target.py select` on the command line also changes the active target in VS Code, and vice versa. clangd and the debug configurations follow the active target too: they use copies of its build outputs in `build/` (`compile_commands.json` and `active.*`), which only the helper script updates, on `select` and with each build. After building with plain west, run the *Build* task once to update them. A target that has not been built yet has no copies, so clangd has no compile database until its first build.
 
-The debug configurations take the Zephyr SDK from `opener.zephyrSdkPath` in `.vscode/settings.json`, which points to the default location of `west sdk install`. If your SDK is installed elsewhere, change the value accordingly. Setting it in your user settings has no effect, because the value in `.vscode/settings.json` takes precedence.
+The debug configurations take the Zephyr SDK from `opener.zephyrSdkPath` in `.vscode/settings.json`, which points to the default location of `west sdk install`. If your SDK is installed elsewhere, change the value accordingly. Setting it in your user settings has no effect because the value in `.vscode/settings.json` takes precedence.
 
----
+## 🧩 Adding Samples, Boards, and Chips
 
-# 🧩 Adding Samples, Boards and Chips
-
-## New Sample
+### New Sample
 
 * Add `samples/<name>/` with a `sample.yaml` that lists the supported boards in `platform_allow`.
 * For each chip and board the sample supports, add the matching `socs/` and `boards/` files (copy them from `samples/dectnrp-driver/`).
-* The helper script, the VS Code tasks and `build-all` pick it up automatically.
+* The helper script, the VS Code tasks, and `build-all` pick it up automatically.
 
-## New Board
+### New Board
 
 For boards with an already supported chip, e.g. nRF9151:
 
 * The board definition must be available, in Zephyr/NCS or in a module from `samples/west.yml` (like `codz-sdk`).
 * Add the board to `platform_allow` of each sample it runs on.
 * Add `boards/<board>_<qualifiers>.overlay` to a sample to adjust the board's flash and SRAM layout (see the existing overlays). The layout can differ between boards; e.g. the Thingy:91 X has less SRAM reserved for the modem than the nRF9151 DK. Chip settings come from the sample's `socs/` automatically.
-* Flashing, debugging and the J-Link script come from the board definition; the helper script and `.vscode/launch.json` need no changes.
+* Flashing, debugging, and the J-Link script come from the board definition; the helper script and `.vscode/launch.json` need no changes.
 
-## New Chip
+### New Chip
 
 * Add `socs/<soc>_<qualifiers>.conf`/`.overlay` to a sample for its chip-specific settings.
-* Add a *Debug*/*Attach* pair for the chip to `.vscode/launch.json`, with its `device`, `svdPath` and toolchain.
+* Add a *Debug*/*Attach* pair for the chip to `.vscode/launch.json`, with its `device`, `svdPath`, and toolchain.
 
----
-
-# 📄 License
+## 📄 License
 
 Copyright (c) 2026 Opener Initiative contributors
 
@@ -203,9 +181,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 See the License for the specific language governing permissions and limitations under the License.
 
----
-
-# ⚠️ Disclaimer
+## ⚠️ Disclaimer
 
 This software is provided as a **reference implementation** for research and development purposes.
 
