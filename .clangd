@@ -1,4 +1,6 @@
 CompileFlags:
+  # Copy of the active target's compile_commands.json (scripts/target.py)
+  CompilationDatabase: build
   Add: [-Wno-unknown-warning-option]
   Remove: [-mfp16-format=ieee, -fno-reorder-functions, -fno-printf-return-value ]
 Diagnostics:

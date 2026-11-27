@@ -1,0 +1,29 @@
+{
+	// Zephyr SDK used by the debug configurations (default location of
+	// `west sdk install`). Must match deps/zephyr/SDK_VERSION.
+	"opener.zephyrSdkPath": "${userHome}/zephyr-sdk-1.0.1/gnu",
+	// Editor settings: keep in sync with opener-samples.code-workspace
+	"files.associations": {
+		"*.h": "c"
+	},
+	"files.eol": "\n",
+	"files.insertFinalNewline": true,
+	"files.trimTrailingWhitespace": true,
+	"[markdown]": {
+		"files.trimTrailingWhitespace": false
+	},
+	"[c]": {
+		"editor.insertSpaces": false,
+		"editor.tabSize": 8,
+		"editor.rulers": [
+			100
+		]
+	},
+	// Set up IntelliSense via clangd; keep settings in sync with
+	// opener-samples.code-workspace. The compile database is set in .clangd.
+	"C_Cpp.intelliSenseEngine": "disabled",
+	"clangd.arguments": [
+		"--query-driver=**/*-zephyr-*",
+		"--header-insertion=never"
+	]
+}

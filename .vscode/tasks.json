@@ -1,0 +1,138 @@
+{
+	// The tasks work on the active target (sample + board), see
+	// scripts/target.py. Select it with the "Select target" task or with
+	// `python scripts/target.py select` on the command line.
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Select target",
+			"type": "process",
+			"command": "${workspaceFolder}/.venv/bin/python",
+			"windows": {
+				"command": "${workspaceFolder}/.venv/Scripts/python.exe"
+			},
+			"args": [
+				"${workspaceFolder}/scripts/target.py",
+				"select"
+			],
+			"presentation": {
+				"focus": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Build",
+			"type": "process",
+			"command": "${workspaceFolder}/.venv/bin/python",
+			"windows": {
+				"command": "${workspaceFolder}/.venv/Scripts/python.exe"
+			},
+			"args": [
+				"${workspaceFolder}/scripts/target.py",
+				"build"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": {
+				"base": "$gcc",
+				"fileLocation": [
+					"autoDetect",
+					"${workspaceFolder}"
+				]
+			}
+		},
+		{
+			"label": "Pristine build",
+			"type": "process",
+			"command": "${workspaceFolder}/.venv/bin/python",
+			"windows": {
+				"command": "${workspaceFolder}/.venv/Scripts/python.exe"
+			},
+			"args": [
+				"${workspaceFolder}/scripts/target.py",
+				"build",
+				"-p",
+				"always"
+			],
+			"group": "build",
+			"problemMatcher": {
+				"base": "$gcc",
+				"fileLocation": [
+					"autoDetect",
+					"${workspaceFolder}"
+				]
+			}
+		},
+		{
+			"label": "Build all",
+			"type": "process",
+			"command": "${workspaceFolder}/.venv/bin/python",
+			"windows": {
+				"command": "${workspaceFolder}/.venv/Scripts/python.exe"
+			},
+			"args": [
+				"${workspaceFolder}/scripts/target.py",
+				"build-all"
+			],
+			"group": "build",
+			"problemMatcher": {
+				"base": "$gcc",
+				"fileLocation": [
+					"autoDetect",
+					"${workspaceFolder}"
+				]
+			}
+		},
+		{
+			"label": "Flash",
+			"type": "process",
+			"command": "${workspaceFolder}/.venv/bin/python",
+			"windows": {
+				"command": "${workspaceFolder}/.venv/Scripts/python.exe"
+			},
+			"args": [
+				"${workspaceFolder}/scripts/target.py",
+				"flash"
+			],
+			"problemMatcher": []
+		},
+		{
+			"label": "RTT console",
+			"type": "process",
+			"command": "${workspaceFolder}/.venv/bin/python",
+			"windows": {
+				"command": "${workspaceFolder}/.venv/Scripts/python.exe"
+			},
+			"args": [
+				"${workspaceFolder}/scripts/target.py",
+				"rtt"
+			],
+			"presentation": {
+				"focus": true
+			},
+			"problemMatcher": []
+		},
+		{
+			// Uses clang-format from the venv (i.e., the version pinned in
+			// constraints.txt, which is also the one used in CI)
+			"label": "Format current file",
+			"type": "process",
+			"command": "${workspaceFolder}/.venv/bin/python",
+			"windows": {
+				"command": "${workspaceFolder}/.venv/Scripts/python.exe"
+			},
+			"args": [
+				"-c",
+				"import sys, clang_format\nif not sys.argv[-1].endswith(('.c', '.h')): sys.exit('Not a C source or header: ' + sys.argv[-1])\nclang_format.clang_format()",
+				"-i",
+				"${file}"
+			],
+			"presentation": {
+				"reveal": "silent"
+			},
+			"problemMatcher": []
+		}
+	]
+}
